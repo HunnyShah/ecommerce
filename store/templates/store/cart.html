@@ -1,0 +1,73 @@
+{% extends "store/base.html" %}
+
+{% block content %}
+<h1 class="mb-4">Your Shopping Cart</h1>
+
+{% if cart_items %}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in cart_items %}
+        <tr>
+            <td>{{ item.product.name }}</td>
+            <td>
+                <input type="number" class="form-control quantity-input" value="{{ item.quantity }}" min="1"
+                    data-product-id="{{ item.product.id }}">
+            </td>
+            <td>${{ item.product.price }}</td>
+            <td>${{ item.product.price * item.quantity }}</td>
+            <td>
+                <button class="btn btn-danger btn-sm remove-from-cart"
+                    data-product-id="{{ item.product.id }}">Remove</button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h3>Total: $<span id="cart-total">{{ total }}</span></h3>
+<a href="{% url 'checkout' %}" class="btn btn-success btn-lg">Proceed to Checkout</a>
+{% else %}
+<p>Your cart is empty.</p>
+{% endif %}
+
+<a href="{% url 'home' %}" class="btn btn-primary">Continue Shopping</a>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function () {
+        // Handle quantity changes
+        $('.quantity-input').change(function () {
+            var productId = $(this).data('product-id');
+            var quantity = $(this).val();
+
+            // Update the cart via AJAX
+            $.post("{% url 'update_cart' %}", {
+                product_id: productId,
+                quantity: quantity
+            }, function (data) {
+                // Update cart total dynamically
+                $('#cart-total').text(data.total);
+                $('#cart-count').text(data.cart_count);
+            });
+        });
+
+        // Handle removing an item from the cart
+        $('.remove-from-cart').click(function () {
+            var productId = $(this).data('product-id');
+            $.post("{% url 'remove_from_cart' 0 %}".replace('0', productId), function (data) {
+                location.reload();
+            });
+        });
+    });
+</script>
+{% endblock %}

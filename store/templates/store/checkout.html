@@ -1,0 +1,11 @@
+<h2>Checkout</h2>
+<ul>
+    {% for item in cart_items %}
+    <li>{{ item.product.name }} - ${{ item.product.price }} x {{ item.quantity }}</li>
+    {% endfor %}
+</ul>
+<p>Total: ${{ total }}</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Proceed to Payment</button>
+</form>

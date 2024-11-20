@@ -1,0 +1,9 @@
+<h2>Payment</h2>
+<p>Order Total: ${{ order.total_amount }}</p>
+<form method="post">
+    {% csrf_token %}
+    <label>Payment Method:</label><br>
+    <input type="radio" name="payment_method" value="Credit Card" checked> Credit Card<br>
+    <input type="radio" name="payment_method" value="PayPal"> PayPal<br><br>
+    <button type="submit">Pay Now</button>
+</form>

@@ -1,0 +1,66 @@
+{% extends "store/base.html" %}
+
+{% block content %}
+<div class="container">
+
+    <!-- Hero Section -->
+    <div class="row mb-5">
+        <div class="col-12 text-center bg-primary text-white py-5">
+            <h1 class="display-4">Welcome to Our Shopping Cart System</h1>
+            <p class="lead">Discover Amazing Products at Great Prices</p>
+            <a href="{% url 'product_list' %}" class="btn btn-light btn-lg">Shop Now</a>
+        </div>
+    </div>
+
+    <!-- Categories Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="text-center mb-4">Product Categories</h2>
+            <div class="row">
+                {% for category in categories %}
+                <div class="col-md-3 col-sm-6 mb-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="fas fa-tag fa-3x text-primary mb-3"></i>
+                            <h5 class="card-title">{{ category.name }}</h5>
+                            <a href="{% url 'product_list' category.id %}" class="btn btn-outline-primary">View
+                                Products</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured Products Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="text-center mb-4">Featured Products</h2>
+            <div class="row">
+                {% for product in featured_products %}
+                <div class="col-md-4 mb-4">
+                    <div class="card product-card shadow-sm">
+                        <img src="{{ product.image.url|default:'https://via.placeholder.com/300x200' }}"
+                            class="card-img-top" alt="{{ product.name }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <p class="card-text">{{ product.description|truncatewords:10 }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="h4 text-primary">${{ product.price }}</span>
+                                <div>
+                                    <a href="{% url 'product_detail' product.id %}" class="btn btn-sm btn-info">View</a>
+                                    <a href="{% url 'add_to_cart' product.id %}" class="btn btn-sm btn-success">Add to
+                                        Cart</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
